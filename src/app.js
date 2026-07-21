@@ -10,7 +10,7 @@ import logMiddleware from './middlewares/logger.middleware.js';
 import healthcheckRoutes from './routes/healthcheck.routes.js';
 import userRoutes from './routes/user.routes.js';
 import authRoutes from './routes/auth.routes.js';
-
+import tableRoutes from './routes/table.routes.js';
 
 
 const app = express();
@@ -20,6 +20,8 @@ app.use(logMiddleware);
 app.use('/api', healthcheckRoutes);
 app.use('/api', userRoutes);
 app.use('/api', authRoutes);
+
+app.use('/api', authMiddleware, tableRoutes);
 
 app.use(errorMiddleware);
 
