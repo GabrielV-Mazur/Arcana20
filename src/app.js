@@ -11,6 +11,7 @@ import healthcheckRoutes from './routes/healthcheck.routes.js';
 import userRoutes from './routes/user.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import tableRoutes from './routes/table.routes.js';
+import characterRoutes from './routes/character.routes.js';
 
 
 const app = express();
@@ -22,6 +23,7 @@ app.use('/api', userRoutes);
 app.use('/api', authRoutes);
 
 app.use('/api', authMiddleware, tableRoutes);
+app.use('/api', authMiddleware, characterRoutes);
 
 app.use(errorMiddleware);
 

@@ -1,33 +1,42 @@
-const Character = require("../models/character.model");
+import Character from '../models/table.model.js';
 
-const create = async (characterData) => {
-  return await Character.create(characterData);
+export default {
+  create(data) {
+    return Character.create(data);
+  },
+  findAll() {
+    return Character.find();
+  },
+
+  findById(id) {
+    return Character.findById(id);
+  },
+  
+  updateById(id, data) {
+    return Character.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+  },
+  deleteById(id) {
+    return Character.findByIdAndDelete(id);
+  },
 };
+import Product from '../models/table.model.js';
 
-const findAllByOwner = async (ownerId) => {
-  return await Character.find({ owner: ownerId });
-};
+export default {
+  create(data) {
+    return Character.create(data);
+  },
+  findAll() {
+    return Character.find();
+  },
 
-const findById = async (characterId) => {
-  return await Character.findById(characterId);
-};
-
-const update = async (characterId, characterData) => {
-  return await Character.findByIdAndUpdate(
-    characterId,
-    characterData,
-    { new: true }
-  );
-};
-
-const remove = async (characterId) => {
-  return await Character.findByIdAndDelete(characterId);
-};
-
-module.exports = {
-  create,
-  findAllByOwner,
-  findById,
-  update,
-  remove,
+  findById(id) {
+    return Character.findById(id);
+  },
+  
+  updateById(id, data) {
+    return Character.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+  },
+  deleteById(id) {
+    return Character.findByIdAndDelete(id);
+  },
 };

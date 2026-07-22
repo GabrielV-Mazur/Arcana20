@@ -1,22 +1,29 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
+import { Types } from 'mongoose';
 
-const characterSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
-    owner: {
+const characterSchema = new mongoose.Schema({
+  name: { 
+    type: String,
+    required: true,
+    trim: true,
+  },   
+   ownerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-  },
-  {
-    timestamps: true,
-  }
-);
+    email: {
+      type: mongoose.Schema.Types.String,
+      required: "User",
+      unique: true,
+    },
+    password: {
+      type: mongoose.Schema.Types.String,
+      ref: "User",
+      required: "true",
+    },
+}, { timestamps: true });
 
-module.exports = mongoose.model("Character", characterSchema);
+const Character = mongoose.model('Character', characterSchema);
+
+export default Character;

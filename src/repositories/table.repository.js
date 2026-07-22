@@ -1,4 +1,4 @@
-import Product from '../models/table.model.js';
+import Table from '../models/table.model.js';
 
 export default {
   create(data) {
