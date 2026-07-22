@@ -6,8 +6,8 @@ import { requireRole } from '../middlewares/auth.middleware.js';
 const router = Router();
 
 router.post('/users', userController.create);
-router.get('/users', requireRole('ADMIN', 'MASTER', 'PLAYER'), userController.list);
-router.get('/users/:id', requireRole('ADMIN', 'MASTER', 'PLAYER'), ensureValidId, userController.get);
+router.get('/users', requireRole('ADMIN', 'MASTER', 'USER'), userController.list);
+router.get('/users/:id', requireRole('ADMIN', 'MASTER', 'USER'), ensureValidId, userController.get);
 router.put('/users/:id', requireRole('ADMIN'), ensureValidId, userController.update);
 router.delete('/users/:id', requireRole('ADMIN'), ensureValidId, userController.remove);
 
