@@ -4,7 +4,7 @@ import createError from '../utils/app-error.js';
 function ensureValidPayload({ name, description, categories }) {
   if (!name?.trim()) throw createError('Nome é obrigatório.', 400);
   if (!description?.trim()) throw createError('Descrição é obrigatória.', 400);
-  if (!categories || !Array.isArray(categories) || categories.length === 0) throw createError('Categoria é obrigatória.', 400);
+  if (!categories?.trim()) throw createError('Categoria é obrigatória.', 400);
 }
 
 export default {
@@ -14,7 +14,7 @@ export default {
     return repo.create({
       name: data.name.trim(),
       description: data.description.trim(),
-      categories: data.categories,
+      categories: data.categories.trim(),
     });
   },
 
@@ -47,7 +47,7 @@ export default {
     }
 
     if (payload.categories) {
-      payload.categories = payload.categories.map((c) => c.trim());
+      payload.categories = payload.categories.trim();
     }
 
     Object.keys(payload).forEach((key) => {

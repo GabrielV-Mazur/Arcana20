@@ -1,28 +1,34 @@
 import repo from '../repositories/character.repository.js';
+import repoTable from '../repositories/table.repository.js';
 import createError from '../utils/app-error.js';
 import hashPassword, { compareHashedPassword } from '../utils/hash-password.js';
 import { createToken } from '../middlewares/auth.middleware.js';
 
-function ensureValidPayload({ name, ownerId, email, password }) {
+function ensureValidPayload({ name, userId, tableId, classe, race }) {
   if (!name?.trim()) throw createError('Nome é obrigatório.', 400);
-  if (!ownerId) throw createError('Proprietário é obrigatório.', 400);
-  if (!email?.trim()) throw createError('E-mail é obrigatório.', 400);
-  if (!password) throw createError('Senha é obrigatória.', 400);
+  if (!userId) throw createError('Proprietário é obrigatório.', 400);
+  if (!tableId) throw createError('Mesa é obrigatória.', 400);
+  if (!classe?.trim()) throw createError('Classe é obrigatória.', 400);
+  if (!race?.trim()) throw createError('Raça é obrigatória.', 400);
 }
 
 export default {
   async createCharacter(data) {
     ensureValidPayload(data);
-    const existing = await repo.findByEmail(data.email);
-    if (existing) throw createError('E-mail já cadastrado.', 409);
 
-    const hashedPassword = hashPassword(data.password);
-
-    return repo.create({
+    const insert = await repo.create({
       name: data.name.trim(),
-      email: data.email.trim().toLowerCase(),
-      password: hashedPassword,
+      userId: data.userId,
+      tableId: data.tableId,
+      classe: data.classe.trim(),
+      race: data.race.trim(),
     });
+
+    if (!insert) throw createError('Falha ao criar personagem.', 500);
+    console.log(insert._id);
+    const updateTable = await repoTable.updateById(data.tableId, { $push: { characterIds: insert._id } });
+    console.log(updateTable);
+    return insert;
   },
 
   async listCharacters() {
@@ -38,19 +44,23 @@ export default {
   async updateCharacter(id, data) {
     const payload = { ...data };
 
-    if (payload.email) {
-      if (!payload.email.includes('@')) {
-        throw createError('E-mail inválido.', 400);
-      }
-      const existing = await repo.findByEmail(payload.email);
+    if (payload.characterId) {
+      const existing = await repo.findById(payload.characterId);
       if (existing && existing.id !== id) {
-        throw createError('E-mail já cadastrado.', 409);
+        throw createError('Usuário já possui um personagem.', 409);
       }
-      payload.email = payload.email.trim().toLowerCase();
     }
 
     if (payload.name) {
       payload.name = payload.name.trim();
+    }
+
+    if (payload.classe) {
+      payload.classe = payload.classe.trim();
+    }
+
+    if (payload.race) {
+      payload.race = payload.race.trim();
     }
 
     Object.keys(payload).forEach((key) => {
