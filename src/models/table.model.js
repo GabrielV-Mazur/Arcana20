@@ -6,16 +6,19 @@ const tableSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
+    maxlength: 50,
   },   
   description: { 
     type: String,
     required: true,
+    maxlength: 500,
   },
   categories: { 
     type: String,
     required: true,
     trim: true,
     lowercase: true,
+    maxlength: 50,
   },
   characterIds: [{
     type: mongoose.Schema.Types.ObjectId,

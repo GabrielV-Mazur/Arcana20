@@ -2,12 +2,21 @@ import repo from '../repositories/user.repository.js';
 import createError from '../utils/app-error.js';
 import hashPassword, { compareHashedPassword } from '../utils/hash-password.js';
 import { createToken } from '../middlewares/auth.middleware.js';
+import { assertMaxLength } from '../utils/validate-length.js';
+
+const MAX_NAME_LENGTH = 50;
+const MAX_EMAIL_LENGTH = 50;
+const MAX_PASSWORD_LENGTH = 25;
 
 function ensureValidPayload({ name, email, password }) {
   if (!name?.trim()) throw createError('Nome é obrigatório.', 400);
   if (!email?.trim()) throw createError('E-mail é obrigatório.', 400);
   if (!email.includes('@')) throw createError('E-mail inválido.', 400);
   if (!password) throw createError('Senha é obrigatória.', 400);
+
+  assertMaxLength(name.trim(), MAX_NAME_LENGTH, 'Nome');
+  assertMaxLength(email.trim(), MAX_EMAIL_LENGTH, 'E-mail');
+  assertMaxLength(password, MAX_PASSWORD_LENGTH, 'Senha');
 }
 
 export default {
@@ -42,6 +51,7 @@ export default {
       if (!payload.email.includes('@')) {
         throw createError('E-mail inválido.', 400);
       }
+      assertMaxLength(payload.email.trim(), MAX_EMAIL_LENGTH, 'E-mail');
       const existing = await repo.findByEmail(payload.email);
       if (existing && existing.id !== id) {
         throw createError('E-mail já cadastrado.', 409);
@@ -50,7 +60,13 @@ export default {
     }
 
     if (payload.name) {
+      assertMaxLength(payload.name.trim(), MAX_NAME_LENGTH, 'Nome');
       payload.name = payload.name.trim();
+    }
+
+    if (payload.password) {
+      assertMaxLength(payload.password, MAX_PASSWORD_LENGTH, 'Senha');
+      payload.password = hashPassword(payload.password);
     }
 
     Object.keys(payload).forEach((key) => {
