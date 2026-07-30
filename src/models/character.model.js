@@ -6,6 +6,7 @@ const characterSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
+    maxlength: 50,
   },   
    userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -15,17 +16,20 @@ const characterSchema = new mongoose.Schema({
     tableId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Table",
-      required: true,
+      required: false,
+      default: null,
     },
     classe: {
       type: String,
       required: true,
       trim: true,
+      maxlength: 50,
     },
     race: {
       type: String,
       required: true,
       trim: true,
+      maxlength: 50,
     },
 
 }, { timestamps: true });
